@@ -3,9 +3,9 @@ function wordWrap(text: string, columnWidth: number) {
         return text;
     }
     
-    const wrappedText = text.substring(0, columnWidth) + '\n';
+    const wrappedText = text.substring(0, columnWidth).concat('\n');
     const unwrappedText = text.substring(columnWidth);
-    return wrappedText + unwrappedText;
+    return wrappedText.concat(wordWrap(unwrappedText, columnWidth));
 }
   
 describe('The Word Wrap', () => {
