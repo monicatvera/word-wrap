@@ -2,18 +2,17 @@ function wordWrap(text: string, columnWidth: number) {
     if (text.length <= columnWidth) {
         return text;
     }
-    
-    let wrappedText = text.substring(0, columnWidth) + '\n';
-    let unwrappedText = text.substring(columnWidth);
-    let acumulatedText = wrappedText;
-    
-    while (unwrappedText.length > columnWidth) {
-        wrappedText = unwrappedText.substring(0, columnWidth) + '\n';
-        unwrappedText = unwrappedText.substring(columnWidth);
-        acumulatedText += wrappedText;
+    let wrappedText;
+    let unwrappedText;
+    if (text.indexOf(' ') > -1 && text.indexOf(' ') < columnWidth) {
+        wrappedText = text.substring(0, text.indexOf(' ')).concat('\n');
+        unwrappedText = text.substring(text.indexOf(' ') + 1);
+    } else {
+        wrappedText = text.substring(0, columnWidth).concat('\n');
+        unwrappedText = text.substring(columnWidth);
     }
-    
-    return acumulatedText + unwrappedText;
+
+    return wrappedText.concat(wordWrap(unwrappedText, columnWidth));
 }
   
 describe('The Word Wrap', () => {
