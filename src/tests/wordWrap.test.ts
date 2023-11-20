@@ -1,7 +1,3 @@
-function wordWrap(text: string, columnWidth: number) {
-    return wordWrapNoPrimitives(WrappableText.create(text), ColumnWidth.create(columnWidth));
-}
-  
 class ColumnWidth {
     private constructor(private readonly width: number) {
     }
@@ -32,16 +28,32 @@ class WrappableText {
       return this.value().length <= columnWidth.value();
     }
   
-    wrapIndex(columnWidth: ColumnWidth) {
-      const indexOfSpace = this.value().indexOf(' ');
-      const shallWrapBySpace = indexOfSpace > -1 && indexOfSpace < columnWidth.value();
-      return shallWrapBySpace ? indexOfSpace : columnWidth.value();
+    concat(text: WrappableText) {
+      return WrappableText.create(this.value().concat(text.value()));
     }
   
-    unwrapIndex(columnWidth: ColumnWidth) {
-      const indexOfSpace = this.value().indexOf(' ');
-      const shallWrapBySpace = indexOfSpace > -1 && indexOfSpace < columnWidth.value();
-      return shallWrapBySpace ? indexOfSpace + 1 : columnWidth.value();
+    wrappedText(columnWidth: ColumnWidth) {
+      return WrappableText.create(this.value().substring(0, this.wrapIndex(columnWidth)).concat('\n'));
+    }
+  
+    private wrapIndex(columnWidth: ColumnWidth) {
+      return this.shallWrapBySpace(columnWidth) ? this.indexOfSpace() : columnWidth.value();
+    }
+  
+    unwrappedText(columnWidth: ColumnWidth) {
+      return WrappableText.create(this.value().substring(this.unwrapIndex(columnWidth)));
+    }
+  
+    private unwrapIndex(columnWidth: ColumnWidth) {
+      return this.shallWrapBySpace(columnWidth) ? this.indexOfSpace() + 1 : columnWidth.value();
+    }
+  
+    private shallWrapBySpace(columnWidth: ColumnWidth) {
+      return this.indexOfSpace() > -1 && this.indexOfSpace() < columnWidth.value();
+    }
+  
+    private indexOfSpace() {
+      return this.value().indexOf(' ');
     }
   
     value() {
@@ -49,15 +61,17 @@ class WrappableText {
     }
 }
   
-function wordWrapNoPrimitives(text: WrappableText, columnWidth: ColumnWidth) {
+function wordWrap(text: string, columnWidth: number) {
+    return wordWrapNoPrimitives(WrappableText.create(text), ColumnWidth.create(columnWidth)).value();
+}
+  
+function wordWrapNoPrimitives(text: WrappableText, columnWidth: ColumnWidth): WrappableText {
     if (text.fitsIn(columnWidth)) {
-      return text.value();
+      return text;
     }
-    const wrapIndex = text.wrapIndex(columnWidth);
-    const unwrapIndex = text.unwrapIndex(columnWidth);
-    const wrappedText = text.value().substring(0, wrapIndex).concat('\n');
-    const unwrappedText = text.value().substring(unwrapIndex);
-    return wrappedText.concat(wordWrapNoPrimitives(WrappableText.create(unwrappedText), columnWidth));
+    const wrappedText = text.wrappedText(columnWidth);
+    const unwrappedText = text.unwrappedText(columnWidth);
+    return wrappedText.concat(wordWrapNoPrimitives(unwrappedText, columnWidth));
 }
   
 describe('The Word Wrap', () => {
