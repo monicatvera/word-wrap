@@ -26,15 +26,15 @@ Examples to work on in the tests:
 
 ## Test list
 List of possible tests that we want to do based on their difficulty:
-- [ ] **{} ⇒ nil**: if there is no code to return null..
-- [ ] **nil ⇒ constant**: from null to returning a literal value.
-- [ ] **constant ⇒ constant+**: from a simple literal value to a more complex one.
-- [ ] **constant ⇒ scalar**: from a literal value to a variable.
-- [ ] **statement ⇒ statements**: add more lines of code without conditionals.
-- [ ] **unconditional ⇒ if**: introduce a conditional.
-- [ ] **scalar ⇒ array**: from simple variable to collection.
-- [ ] **array ⇒ container**: from collection to container.
-- [ ] **statement ⇒ recursion**: introduce recursion.
-- [ ] **if ⇒ while**: convert conditional to loop.
-- [ ] **expression ⇒ function**: replace expression with function call.
-- [ ] **variable ⇒ assignment**: mutate the value of a variable.
+- [x] **{} ⇒ nil**: if there is no code to return null..
+- [x] **nil ⇒ constant**: from null to returning a literal value.
+- [x] **constant ⇒ constant+**: from a simple literal value to a more complex one.
+- [x] **constant ⇒ scalar**: from a literal value to a variable.
+- [x] **statement ⇒ statements**: add more lines of code without conditionals.
+- [x] **unconditional ⇒ if**: introduce a conditional.
+- [x] **scalar ⇒ array**: from simple variable to collection.
+- [x] **array ⇒ container**: from collection to container.
+- [x] **statement ⇒ recursion**: introduce recursion.
+- [x] **if ⇒ while**: convert conditional to loop.
+- [x] **expression ⇒ function**: replace expression with function call.
+- [x] **variable ⇒ assignment**: mutate the value of a variable.
