@@ -1,9 +1,11 @@
 function wordWrap(text: string, columnWidth: number) {
-    if (text.length > columnWidth) {
-        return text.substring(0, columnWidth) + '\n' + text.substring(columnWidth);
+    if (text.length <= columnWidth) {
+        return text;
     }
-
-    return text;
+    
+    const wrappedText = text.substring(0, columnWidth) + '\n';
+    const unwrappedText = text.substring(columnWidth);
+    return wrappedText + unwrappedText;
 }
   
 describe('The Word Wrap', () => {
