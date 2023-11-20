@@ -1,17 +1,5 @@
-function getWrapIndex(text: string, columnWidth: number) {
-    const indexOfSpace = text.indexOf(' ');
-    const shallWrapBySpace = indexOfSpace > -1 && indexOfSpace < columnWidth;
-    return shallWrapBySpace ? indexOfSpace : columnWidth;
-}
-  
-function getUnwrapIndex(text: string, columnWidth: number) {
-    const indexOfSpace = text.indexOf(' ');
-    const shallWrapBySpace = indexOfSpace > -1 && indexOfSpace < columnWidth;
-    return shallWrapBySpace ? indexOfSpace + 1 : columnWidth;
-}
-  
 function wordWrap(text: string, columnWidth: number) {
-    return wordWrapNoPrimitives(text, ColumnWidth.create(columnWidth));
+    return wordWrapNoPrimitives(WrappableText.create(text), ColumnWidth.create(columnWidth));
 }
   
 class ColumnWidth {
@@ -30,19 +18,46 @@ class ColumnWidth {
     }
 }
   
-function wordWrapNoPrimitives(text: string, columnWidth: ColumnWidth) {
-    if (text == null) {
-      return '';
-    }
-    if (text.length <= columnWidth.value()) {
-      return text;
+class WrappableText {
+    private constructor(private readonly text: string) { }
+  
+    static create(text: string) {
+      if (text == null) {
+        return new WrappableText('');
+      }
+      return new WrappableText(text);
     }
   
-    const wrapIndex = getWrapIndex(text, columnWidth.value());
-    const unwrapIndex = getUnwrapIndex(text, columnWidth.value());
-    const wrappedText = text.substring(0, wrapIndex).concat('\n');
-    const unwrappedText = text.substring(unwrapIndex);
-    return wrappedText.concat(wordWrap(unwrappedText, columnWidth.value()));
+    fitsIn(columnWidth: ColumnWidth) {
+      return this.value().length <= columnWidth.value();
+    }
+  
+    wrapIndex(columnWidth: ColumnWidth) {
+      const indexOfSpace = this.value().indexOf(' ');
+      const shallWrapBySpace = indexOfSpace > -1 && indexOfSpace < columnWidth.value();
+      return shallWrapBySpace ? indexOfSpace : columnWidth.value();
+    }
+  
+    unwrapIndex(columnWidth: ColumnWidth) {
+      const indexOfSpace = this.value().indexOf(' ');
+      const shallWrapBySpace = indexOfSpace > -1 && indexOfSpace < columnWidth.value();
+      return shallWrapBySpace ? indexOfSpace + 1 : columnWidth.value();
+    }
+  
+    value() {
+      return this.text;
+    }
+}
+  
+function wordWrapNoPrimitives(text: WrappableText, columnWidth: ColumnWidth) {
+    if (text.fitsIn(columnWidth)) {
+      return text.value();
+    }
+    const wrapIndex = text.wrapIndex(columnWidth);
+    const unwrapIndex = text.unwrapIndex(columnWidth);
+    const wrappedText = text.value().substring(0, wrapIndex).concat('\n');
+    const unwrappedText = text.value().substring(unwrapIndex);
+    return wrappedText.concat(wordWrapNoPrimitives(WrappableText.create(unwrappedText), columnWidth));
 }
   
 describe('The Word Wrap', () => {
