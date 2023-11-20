@@ -41,5 +41,6 @@ describe('The Word Wrap', () => {
       expect(wordWrap(' abcd', 4)).toBe('\nabcd');
       expect(wordWrap(null, 5)).toBe('');
       expect(wordWrap(undefined, 5)).toBe('');
+      expect(() => wordWrap('hello', -5)).toThrow('Negative column width is not allowed');
     });
 });
