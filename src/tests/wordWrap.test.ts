@@ -1,4 +1,8 @@
 function wordWrap(text: string, columnWidth: number) {
+    if (text.length > columnWidth) {
+        return text.substring(0, columnWidth) + '\n' + text.substring(columnWidth);
+    }
+
     return text;
 }
   
